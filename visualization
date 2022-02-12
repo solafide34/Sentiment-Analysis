@@ -1,0 +1,93 @@
+# VISUALISASI DAN ASOSIASI NEGATIF
+setwd("D:/Syntax")
+asosiasi<- read.csv('ulasannegatif.csv') #pemisahan dari data sentiment_scoring.csv yg dissort trs dipisah
+#Stopwords Removing
+asosiasi= VCorpus(VectorSource(asosiasi$text.text))
+inspect(asosiasi[1:3])
+stopwordsID <- readLines("stopwordsID.txt")
+asosiasi=tm_map(asosiasi, removeWords, stopwordsID)
+write.csv(stopwords_asosiasi, file = "asosiasi negatif.csv")
+#Stemming (ditaru di sini untuk mengurangi dimensi)
+stemming=function(x){
+  paste(sapply(unlist(str_split(x,'\\s+')),katadasar), collapse=" ")
+}
+asosiasi=tm_map(asosiasi,content_transformer(stemming))
+# Eliminate extra white spaces
+asosiasi<- tm_map(asosiasi, stripWhitespace)
+white_asosiasi<- data.frame(text=sapply(asosiasi,as.character),stringsAsFactors=FALSE)
+write.csv(white_asosiasi,file="asosiasi negatif.csv")
+
+#Build a term-document matrix
+dtm <- TermDocumentMatrix(asosiasi)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+
+write.csv(m, file = "dtm negatif.csv")
+
+
+#Generate the Word cloud
+set.seed(1234)
+wordcloud(words = d$word, freq = d$freq, min.freq = 1,max.words=50, random.order=FALSE, rot.per=0.35,colors=brewer.pal(8, "Dark2"))
+#Explore frequent terms and their associations
+findFreqTerms(dtm, lowfreq = 4)
+#asosiasi kata
+v1<-as.list(findAssocs(dtm, terms =c("tiktok",'gagal','aplikasi','iya','tolong'),corlimit =c(0.2,0.2,0.2,0.2,0.2)))
+v2<-as.list(findAssocs(dtm, terms =c('video','aneh','akun','bintang','baik'),corlimit =c(0.2,0.2,0.2,0.2,0.2)))
+head(v1)
+head(v2)
+#barplot
+k<-barplot(d[1:10,]$freq, las = 2, names.arg =d[1:10,]$word,cex.axis=1.2,
+           cex.names=1.2,main ="Most frequent words",ylab = "Word frequencies",
+           col = topo.colors(20))
+termFrequency <- rowSums(as.matrix(dtm))
+termFrequency <- subset(termFrequency, termFrequency>=5)
+text(k,sort(termFrequency, decreasing = T),labels=sort(termFrequency, decreasing = T),pch = 6, cex=1)
+
+
+# VISUALISASI DAN ASOSIASI POSITIF
+setwd("D:/Syntax")
+asosiasi<- read.csv('ulasanpositif.csv') #pemisahan dari data sentiment_scoring.csv yg dissort trs dipisah
+#Stopwords Removing
+asosiasi= VCorpus(VectorSource(asosiasi$text.text))
+inspect(asosiasi[1:3])
+stopwordsID <- readLines("stopwordsID.txt")
+asosiasi=tm_map(asosiasi, removeWords, stopwordsID)
+#Stemming (ditaru di sini untuk mengurangi dimensi)
+stemming=function(x){
+  paste(sapply(unlist(str_split(x,'\\s+')),katadasar), collapse=" ")
+}
+asosiasi=tm_map(asosiasi,content_transformer(stemming))
+# Eliminate extra white spaces
+asosiasi<- tm_map(asosiasi, stripWhitespace)
+white_asosiasi<- data.frame(text=sapply(asosiasi,as.character),stringsAsFactors=FALSE)
+write.csv(white_asosiasi,file="asosiasi positif.csv")
+
+#Build a term-document matrix
+dtm <- TermDocumentMatrix(asosiasi)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+
+write.csv(m, file = "dtm positif.csv")
+
+#Generate the Word cloud
+set.seed(1234)
+wordcloud(words = d$word, freq = d$freq, min.freq = 1,max.words=50, random.order=FALSE, rot.per=0.35,colors=brewer.pal(8, "Dark2"))
+#Explore frequent terms and their associations
+findFreqTerms(dtm, lowfreq = 4)
+
+#asosiasi kata
+v1<-as.list(findAssocs(dtm, terms =c("aplikasi","tiktok","bagus",'banget','video'),corlimit =c(0.2,0.2,0.2,0.2,0.2)))
+v2<-as.list(findAssocs(dtm, terms =c("suka","terimakasih","hibur",'unduh','iya'),corlimit =c(0.2,0.2,0.2,0.2,0.2)))
+head(v1)
+head(v2)
+#barplot
+k<-barplot(d[1:10,]$freq, las = 2, names.arg =d[1:10,]$word,cex.axis=1.2,
+           cex.names=1.2,main ="Most frequent words",ylab = "Word frequencies",
+           col = topo.colors(20))
+termFrequency <- rowSums(as.matrix(dtm))
+termFrequency <- subset(termFrequency, termFrequency>=5)
+text(k,sort(termFrequency, decreasing = T)-1,labels=sort(termFrequency, decreasing = T))
