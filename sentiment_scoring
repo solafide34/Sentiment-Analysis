@@ -42,3 +42,9 @@ scores.sentiment <- function(kalimat, senti, .progress='none') {
 }
 results = scores.sentiment(prep_normalisasi$text, senti)
 set.seed(50) 
+
+#Convert to sentiment classes
+results$class <- as.factor(ifelse(results$score<0, "Negatif","Positif"))
+resultsclass <- subset(results, select = c("text","class"))
+df.results <- data.frame(text=sapply(results, as.character), stringsAsFactors = FALSE)
+write.csv(df.results, file = "Sentiments_Scoring_tes.csv")
