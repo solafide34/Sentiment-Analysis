@@ -1,0 +1,11 @@
+#PEMBOBOTAN
+#Pembobotan Term Frequency (TF)
+dtm.tf <- DocumentTermMatrix(docs)
+dtm.tf.matriks = as.matrix(dtm.tf)
+dtm.tf.matriks[1:10,1:20]
+write.csv(dtm.tf.matriks, file = "matriksTF.csv")
+
+#Pembobotan Term Frequency-Inverse Document Frequency (TF-IDF)
+dtm.tf.idf <- weightTfIdf(m = dtm.tf, normalize = TRUE)
+dtm.tf.idf.matriks=as.matrix(dtm.tf.idf)
+write.csv(dtm.tf.idf.matriks, file = "matriksTF-IDF.csv")
