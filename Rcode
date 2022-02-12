@@ -1,0 +1,58 @@
+#LOAD PACKAGES
+library('tm') #text mining
+library('SnowballC') #stemming
+library('katadasaR') #stemming
+library('wordcloud') #visualisasi
+library('RColorBrewer') #visualisasi
+library('stringr') #mengubah jd string di R untuk siap olah ke tahap selanjutnya
+library('dplyr') #sentiment scoring --> mutate di kamus2 (Create, modify, and delete columns)
+library('plyr') #sentiment scoring --> mutate data frame dg nambah colom baru atau replace
+library('RTextTools') #Klasifikasi text via Supervised Learning --> create matrix, matrix container, trained model
+library('e1071') #algoritma SVM kernels
+library('caret') #evaluasi klasifikasi --> confusion matrix
+
+setwd("D:/Syntax")
+docs<- read.csv('tiktok13.csv')
+str(docs)
+# Load the data as a corpus
+docs<- VCorpus(VectorSource(docs$ulasan))
+inspect(docs[1:3])
+
+
+#PREPROCESSING
+#Inspect the content of the document #menampilkan data
+#Replacing "/", "@" and "|" with space:
+toSpace <- content_transformer(function (x , pattern )
+  gsub(pattern, " ", x))
+docs <- tm_map(docs, toSpace, "/")
+docs <- tm_map(docs, toSpace, "@")
+docs <- tm_map(docs, toSpace, "\\|")
+
+#1. case folding >> Convert the text to lower case
+docs <- tm_map(docs, content_transformer(tolower))
+tol<-data.frame(text=sapply(docs,as.character,stringAsFactors=FALSE))
+write.csv(tol,file="prep_tolower.csv")
+#2. Cleaning the text
+#Remove punctuation
+docs <- tm_map(docs, toSpace, "[[:punct:]]")
+punc<-data.frame(text=sapply(docs,as.character,stringAsFactors=FALSE))
+write.csv(punc,file="prep_punc.csv")
+#Remove numbers
+docs <- tm_map(docs, toSpace, "[[:digit:]]")
+num<-data.frame(text=sapply(docs,as.character,stringAsFactors=FALSE))
+write.csv(num,file="prep_number.csv")
+#Remove  mention
+removeMention <- function(x) gsub("@\\w+", "", x)
+docs<- tm_map(docs,content_transformer(removeMention))
+prep_removemention <- data.frame(text=sapply(docs,as.character), stringsAsFactors=FALSE)
+write.csv(prep_removemention,file="prep_mention.csv")
+#Remove emoticon
+removeEmoticon<- function(x) gsub("[^\x01-\x7F]", "", x)
+docs<- tm_map(docs,content_transformer(removeEmoticon))
+prep_removeemoticon <- data.frame(text=sapply(docs,as.character), stringsAsFactors=FALSE)
+write.csv(prep_removeemoticon,file="prep_emot.csv")
+
+# Eliminate extra white spaces
+docs <- tm_map(docs, stripWhitespace)
+white<- data.frame(text=sapply(docs,as.character),stringsAsFactors=FALSE)
+write.csv(white,file="prep_white.csv")
