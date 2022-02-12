@@ -1,0 +1,72 @@
+#SVM
+setwd("D:/Syntax")
+#membuat matrix container:matrix untuk wadah training, klasifikasi, dan analisis dok --> dr matrix TF-IDF untuk training dan klasifikasi 
+traintest=df.results
+container.tfidf <- create_container(matrix = dtm.tf.idf,labels =traintest$text.class,trainSize = 1:2560,testSize = 2561:3200,virgin = FALSE)
+
+#model RBF
+#cost=0.01
+model_radial1 <-train_model(container.tfidf, 'SVM','radial',cost = 0.01) #makes a model object using SVM algorithm
+model_radial1
+model_radial1[["rho"]] #nilai b
+head(model_radial1[["coefs"]]) #nilai alfa yg termasuk sv, selain sv a=0
+head(model_radial1[["index"]]) #indeks data ke berapa yang adalah sv
+results_radial1 <-classify_model(container.tfidf, model_radial1) #makes predictions from a train_model by Uses a trained model to classify new data
+head(results_radial1) #hasil klasifikasi data uji
+conf_mat_radial1<-confusionMatrix(factor(results_radial1[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200])) #menghitung cross-tabulation dari kelas yg diamati dan diprediksi
+conf_mat_radial1
+
+#Cost = 0.1
+model_radial2 <-train_model(container.tfidf, 'SVM','radial', cost = 0.1)
+model_radial2
+model_radial2[["rho"]] #nilai b
+head(model_radial2[["coefs"]]) #nilai alfa yg termasuk sv, selain sv a=0
+head(model_radial2[["index"]]) #indeks data ke berapa yang adalah sv
+results_radial2 <-classify_model(container.tfidf, model_radial2)
+head(results_radial2)
+conf_mat_radial2<-confusionMatrix(factor(results_radial2[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200]))
+conf_mat_radial2
+
+#Cost=1
+model_radial3 <-train_model(container.tfidf, 'SVM','radial',cost = 1)
+model_radial3
+model_radial3[["rho"]] #nilai b
+head(model_radial3[["coefs"]]) #nilai alfa yg termasuk sv, selain sv a=0
+head(model_radial3[["index"]]) #indeks data ke berapa yang adalah sv
+results_radial3 <-classify_model(container.tfidf, model_radial3)
+head(results_radial3)
+conf_mat_radial3<-confusionMatrix(factor(results_radial3[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200]))
+conf_mat_radial3
+
+#Cost=10
+model_radial4 <-train_model(container.tfidf, 'SVM','radial',cost = 10)
+model_radial4
+model_radial4[["rho"]] #nilai b
+head(model_radial4[["coefs"]]) #nilai alfa yg termasuk sv, selain sv a=0
+head(model_radial4[["index"]]) #indeks data ke berapa yang adalah sv
+results_radial4 <-classify_model(container.tfidf, model_radial4)
+head(results_radial4)
+conf_mat_radial4<-confusionMatrix(factor(results_radial4[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200]))
+conf_mat_radial4
+
+#cost=100
+model_radial5 <-train_model(container.tfidf, 'SVM','radial',cost = 100)
+model_radial5
+model_radial5[["rho"]] #nilai b
+head(model_radial5[["coefs"]]) #nilai alfa yg termasuk sv, selain sv a=0
+head(model_radial5[["index"]]) #indeks data ke berapa yang adalah sv
+results_radial5 <-classify_model(container.tfidf, model_radial5)
+head(results_radial5)
+conf_mat_radial5<-confusionMatrix(factor(results_radial5[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200]))
+conf_mat_radial5
+
+#cost=1000
+model_radial6 <-train_model(container.tfidf, 'SVM','radial',cost = 1000)
+model_radial6
+model_radial6[["rho"]] #nilai b
+head(model_radial6[["coefs"]]) #nilai alfa yg termasuk sv, selain sv a=0
+head(model_radial6[["index"]]) #indeks data ke berapa yang adalah sv
+results_radial6 <-classify_model(container.tfidf, model_radial6)
+head(results_radial6)
+conf_mat_radial6<-confusionMatrix(factor(results_radial6[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200]))
+conf_mat_radial6
