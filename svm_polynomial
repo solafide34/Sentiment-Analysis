@@ -1,0 +1,36 @@
+setwd("D:/Syntax")
+#membuat matrix container:matrix untuk wadah training, klasifikasi, dan analisis dok --> dr matrix TF-IDF untuk training dan klasifikasi 
+traintest=df.results
+container.tfidf <- create_container(matrix = dtm.tf.idf,labels =traintest$text.class,trainSize = 1:2560,testSize = 2561:3200,virgin = FALSE)
+
+#POLYNOMIAL
+#cost=0.01
+model_pol1 <-train_model(container.tfidf, 'SVM','polynomial',cost = 0.01) #makes a model object using SVM algorithm
+results_pol1 <-classify_model(container.tfidf, model_pol1) #makes predictions from a train_model by Uses a trained model to classify new data
+conf_mat_pol1<-confusionMatrix(factor(results_pol1[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200])) #menghitung cross-tabulation dari kelas yg diamati dan diprediksi
+conf_mat_pol1
+#Cost = 0.1
+model_pol2 <-train_model(container.tfidf, 'SVM','polynomial',cost = 0.1) #makes a model object using SVM algorithm
+results_pol2 <-classify_model(container.tfidf, model_pol2) #makes predictions from a train_model by Uses a trained model to classify new data
+conf_mat_pol2<-confusionMatrix(factor(results_pol2[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200])) #menghitung cross-tabulation dari kelas yg diamati dan diprediksi
+conf_mat_pol2
+#Cost=1
+model_pol3 <-train_model(container.tfidf, 'SVM','polynomial',cost = 1) #makes a model object using SVM algorithm
+results_pol3 <-classify_model(container.tfidf, model_pol3) #makes predictions from a train_model by Uses a trained model to classify new data
+conf_mat_pol3<-confusionMatrix(factor(results_pol3[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200])) #menghitung cross-tabulation dari kelas yg diamati dan diprediksi
+conf_mat_pol3
+#Cost=10
+model_pol4 <-train_model(container.tfidf, 'SVM','polynomial',cost = 10) #makes a model object using SVM algorithm
+results_pol4 <-classify_model(container.tfidf, model_pol4) #makes predictions from a train_model by Uses a trained model to classify new data
+conf_mat_pol4<-confusionMatrix(factor(results_pol4[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200])) #menghitung cross-tabulation dari kelas yg diamati dan diprediksi
+conf_mat_pol4
+#cost=100
+model_pol5 <-train_model(container.tfidf, 'SVM','polynomial',cost = 100) #makes a model object using SVM algorithm
+results_pol5 <-classify_model(container.tfidf, model_pol5) #makes predictions from a train_model by Uses a trained model to classify new data
+conf_mat_pol5<-confusionMatrix(factor(results_pol5[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200])) #menghitung cross-tabulation dari kelas yg diamati dan diprediksi
+conf_mat_pol5
+#cost=1000
+model_pol6 <-train_model(container.tfidf, 'SVM','polynomial',cost = 1000) #makes a model object using SVM algorithm
+results_pol6 <-classify_model(container.tfidf, model_pol6) #makes predictions from a train_model by Uses a trained model to classify new data
+conf_mat_pol6<-confusionMatrix(factor(results_pol6[,"SVM_LABEL"]), factor(traintest$text.class[2561:3200])) #menghitung cross-tabulation dari kelas yg diamati dan diprediksi
+conf_mat_pol6
