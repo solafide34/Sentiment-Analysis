@@ -1,0 +1,21 @@
+#FEATURE SELECTION
+#Filtering
+#Stopwords Removing
+setwd("D:/Syntax")
+traintestcorpus = VCorpus(VectorSource(df.results$text.text))
+inspect(traintestcorpus[1:3])
+stopwordsID <- readLines("stopwordsID.txt")
+docs=tm_map(traintestcorpus, removeWords, stopwordsID)
+stopwords <-data.frame(text=sapply(docs, as.character), stringsAsFactors = FALSE)
+write.csv(stopwords, file = "remove_stopwords.csv")
+#Stemming (ditaru di sini untuk mengurangi dimensi)
+stemming=function(x){
+  paste(sapply(unlist(str_split(x,'\\s+')),katadasar), collapse=" ")
+}
+docs=tm_map(docs,content_transformer(stemming))
+stemmingindo<-data.frame(text=sapply(docs, as.character), stringsAsFactors = FALSE)
+write.csv(stemmingindo, file = "stemming.csv")
+# Eliminate extra white spaces
+docs <- tm_map(docs, stripWhitespace)
+white<- data.frame(text=sapply(docs,as.character),stringsAsFactors=FALSE)
+write.csv(white,file="white.csv")
