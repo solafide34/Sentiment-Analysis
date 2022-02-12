@@ -1,0 +1,43 @@
+#3. Normalisasi
+#Convert Word (Normalisasi kata)
+setwd("D:/Syntax")
+spell.lex <- read.delim("normalisasi.txt", sep="\t", stringsAsFactors = F)
+spell.correction <- content_transformer(function(x, dict){
+  words <- sapply(unlist(strsplit(x, "\\s+")),function(x){
+  if(is.na(spell.lex[match(x, dict$spell),"word"])){
+    x <- x
+  } else{
+    x <- spell.lex[match(x, dict$spell),"word"]
+  }
+})
+x <- paste(words, collapse = " ")
+})
+docs<- tm_map(docs, spell.correction, spell.lex)
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak baik|tidak bagus|tidak indah|tidak patut|tidak asik|tidak berguna|tidak keren|terlalu cepat|tidak berakhlak|tidak nyaman|tidak normal|tidak bahagia|tidak hd|tidak jelas|tidak pantas|tidak sambung|tidak adil|tidak logis|tidak sesuai|kurang bagus|tidak baik", replacement = "buruk")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak buruk|tidak jelek|tidak merugikan|luar biasa", replacement = "baik")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak menarik|tidak menghibur|tidak enak", replacement = "membosankan")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak membosankan|tidak mengecewakan|tidak bosan|tidak kecewa|tidak menyesal|tidak rugi", replacement = "menghibur")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak lama|tidak lemot", replacement = "cepat")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak cepat", replacement = "lama")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak membantu", replacement = "menyusahkan")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak susah|tidak sulit", replacement = "mudah")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak mudah|tidak gampang", replacement = "sulit")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak suka|tidak senang|like sedikit", replacement = "benci")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak didukung|tidak mendukung|tidak setuju|tidak sama", replacement = "bertentangan")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak menguras|tidak menghabiskan|tidak boros", replacement = "hemat")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak hemat|tidak gratis|baterai habis|habis baterai", replacement = "boros")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak bisa|tidak masuk|tidak tambah|tidak bertambah|tidak berhasil|tidak terlihat|tidak dapat|tidak pernah|tidak memenuhi", replacement = "gagal")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak ada|tidak muncul|tidak kelihatan", replacement = "kekosongan")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tik tok", replacement = "tiktok")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak kalah", replacement = "menang")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak unduh", replacement = "uninstal")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "terima kasih", replacement = "terimakasih")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak stabil", replacement = "labil")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "is the best", replacement = "terbaik")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "i love", replacement = "suka")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak boleh|di larang", replacement = "dilarang")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "tidak merespon|tidak aktif|tidak menanggapi", replacement = "pasif")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "makin sedikit", replacement = "berkurang")
+docs <- tm_map(docs, content_transformer(gsub), pattern = "menindak lanjuti|cepat respon", replacement = "menindaklanjuti")
+prep_normalisasi <- data.frame(text=sapply(docs,as.character),stringsAsFactors=FALSE)
+write.csv(prep_normalisasi,file="prep_normalisasi.csv")
