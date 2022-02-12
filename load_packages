@@ -1,0 +1,19 @@
+#LOAD PACKAGES
+library('tm') #text mining
+library('SnowballC') #stemming
+library('katadasaR') #stemming
+library('wordcloud') #visualisasi
+library('RColorBrewer') #visualisasi
+library('stringr') #mengubah jd string di R untuk siap olah ke tahap selanjutnya
+library('dplyr') #sentiment scoring --> mutate di kamus2 (Create, modify, and delete columns)
+library('plyr') #sentiment scoring --> mutate data frame dg nambah colom baru atau replace
+library('RTextTools') #Klasifikasi text via Supervised Learning --> create matrix, matrix container, trained model
+library('e1071') #algoritma SVM kernels
+library('caret') #evaluasi klasifikasi --> confusion matrix
+
+setwd("D:/Syntax")
+docs<- read.csv('tiktok13.csv')
+str(docs)
+# Load the data as a corpus
+docs<- VCorpus(VectorSource(docs$ulasan))
+inspect(docs[1:3])
